@@ -1,0 +1,73 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: konga
+  labels:
+    app: konga
+spec:
+  selector:
+    matchLabels:
+      app: konga
+  template:
+    metadata:
+      labels:
+        app: konga
+    spec:
+      containers:
+        - name: konga
+          image: pantsel/konga
+          imagePullPolicy: Always
+          volumeMounts:
+          - mountPath: /app/kongadata
+            name: root-volume
+          envFrom:
+            - configMapRef:
+                name: konga-cm
+      restartPolicy: Always
+      volumes:
+      #minikube
+      - name: root-volume
+        hostPath:
+          path: /mnt/konga 
+          type: DirectoryOrCreate
+      #rancher desktop 
+      # - name: root-volume
+      #   persistentVolumeClaim:
+      #     claimName: local-volume-pvc
+---
+#rancher desktop
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: local-volume-pvc
+#   annotations:
+#     volumeType: local
+# spec:
+#   accessModes:
+#     - ReadWriteOnce
+#   storageClassName: local-path
+#   resources:
+#     requests:
+#       storage: 250Mi
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: konga-cm
+data:
+  KONGA_LOG_LEVEL: "debug"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: konga
+  labels:
+    app: konga
+spec:
+  selector:
+    app: konga
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 1337
