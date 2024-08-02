@@ -1,7 +1,5 @@
 # Taller 1b - Administración
 
-# Taller 2 - Administración
-
 **Objetivo:** Crear entidades como Routes, Services, Plugins y Consumers usando distintas estrategias de administración (Konga, cURL y deck)
 
 Para poder iniciar el taller se necesita exponer los siguientes servicios de manera local, exponiendo API Gateway y Admin API de Kong
@@ -30,52 +28,53 @@ En este ejemplo ocuparemos el API https://dummyjson.com/products, que es una API
 
 ### **A) Services**
 
-1. Crearemos un servicio llamado product-service. Importante tener en cuenta los parámetros:
-- **Name:  products-services**
-- **URL:** Se ingresa el endpoint https://dummyjson.com/products  para que se muestre desde Kong.
+1. Crearemos un services llamado **products-service**. Importante tener en cuenta los siguientes parámetros:
+
+- **Name:  products-service**
+- **URL:** Se ingresa el endpoint https://dummyjson.com/products para que se muestre desde Kong
 
 ![Untitled](images/Untitled.png)
 
 ### **B) Routes**
 
-1. Una vez creado el servicio, podemos visualizar los detalles haciendo click sobre el nombre de este
+1. Una vez creado el services, podemos visualizar los detalles haciendo click sobre el nombre de este
 
 ![Untitled](images/Untitled%201.png)
 
-1. Dentro del servicio products-service, nos dirigimos el apartado de **routes** y agregamos un nuevo **route**
+2. Dentro del services **products-service**, nos dirigimos el apartado de **routes** y agregamos un nuevo **route**
 
 ![Untitled](images/Untitled%202.png)
 
 Los valores que se deben considerar son los siguientes:
 
 - **Name:** Corresponde al nombre que se le va a otorgar al route, en este caso los llamaremos **productos**
-- **Paths:**  Aquí podemos definir distintos paths al que podríamos llegar al mismo route. Importante que al momento de agregar nuevos paths se debe presionar “ENTER” para agregarlos. En este caso se agregar un path  de nombre **“/productos”**
+- **Paths:**  Aquí podemos definir distintos paths independiente de ello todos apuntan al mismo route. Importante que al momento de agregar nuevos paths se debe pulsar “ENTER” para agregarlos. En este caso agregaremos un solo path de nombre **“/productos”**
 
 ![Untitled](images/Untitled%203.png)
 
 ![Untitled](images/Untitled%204.png)
 
- 
+
 
 ### **C) Plugins**
 
-Una vez expuesto el API , es necesario definir como se consumirá (tratamiento)
+Una vez expuesto el API, es necesario definir como será consumido (tratamiento)
 
-Lo primero que definiremos será el control del tráfico, limitar los orígenes de los que consumirán nuestro servicio ó API expuesto desde Kong y como se autenticarán. Para ello usaremos los plugins rate-limit, cors, key-auth. Estos los agregaremos a nivel de servicios y se definirá un policy del tipo local para todos. 
+Lo primero que definiremos será el control del tráfico, limitando los orígenes de los que consumirán nuestro servicio ó API expuesto desde Kong y como estos se autenticarán. Para ello usaremos los plugins **rate-limit**, **cors** y **key-auth**. Estos los agregaremos a nivel de servicios y se definirá un policy del tipo local para todos. 
 
-Como se observa este plugin lo asociamos a nivel de la entidad service (product-service)
+Como se observa este plugin lo asociamos a nivel del services **products-service**
 
-### **rate-limit:**
+### **- rate-limit:**
 
-1. Nos dirigiremos al servicio: product-service, luego seleccionamos la opción plugins, elegimos la categoría Traffic Control y seleccionamos el plugin rate-limit.  
+1. Nos dirigiremos a products-service, luego seleccionamos la opción plugins, elegimos la categoría Traffic Control y seleccionamos el plugin **rate-limit**.  
 
 ![Untitled](images/Untitled%205.png)
 
 Para efectos de prueba se deben configurar los siguientes parámetros:
 
-**minute:** 5 
-**limit by:** consumer
-**policy:** local
+- **minute:** 5 
+- **limit by:** consumer
+- **policy:** local
 
 ![Untitled](images/Untitled%206.png)
 
@@ -88,36 +87,36 @@ curl.exe -I http://localhost:8000/productos
 #for _ in {1..6}; do {curl -I http://localhost:8000/productos; sleep 1;}  done
 ```
 
-En la 6.ª petición debería mostrarse 429 como código de estado, significa que llego al límite definido  de peticiones por minutos. 
+En la 6ª petición debería mostrarse el error 429 como código de estado, esto significa que llegó al límite definido de peticiones por minutos. 
 
-### **Cors**
+### **- Cors**
 
-1. Para agregarlo debiésemos  dirigirnos a la opción **plugins del servicio products-service y presionar el botón ADD PLUGIN** 
+1. Para agregarlo nos aseguramos de estar posicionados en el services **products-service**, seleccionamos la opción plugins y pulsamos el botón **ADD PLUGIN** 
 
 ![Untitled](images/Untitled%208.png)
 
-Seleccionar la categoría **Security y el plugin llamado Cors**
+2. Seleccionar la categoría **Security** y el plugin llamado **Cors**
 
 ![Untitled](images/Untitled%209.png)
 
-Los valores a considerar son los siguientes:
+3. Los valores a considerar son los siguientes:
 
-**origins:** Esta opción definirá los orígenes de las solicitudes entrantes que puede aceptar nuestro servicio o API. Para la prueba, definiremos asterisco como valor para que permita que se pueda acceder desde cualquier origen. 
+**origins:** Esta opción definirá los orígenes de las solicitudes entrantes que puede aceptar nuestro servicio ó API. Para esta prueba, definiremos asterisco como valor para que permita que puedan acceder desde cualquier origen. 
 
-> Nota:  Se debe presionar entre para agregar valores a campo “origins”
+> Nota:  Para agregar valores al campo “origins” se debe presionar ENTER
 > 
 
 ![Untitled](images/Untitled%2010.png)
 
-### **key-auth**
+### **- key-auth**
 
-1. Para agregar el plugin **key-auth** debemos dirigirnos a plugins y elegir la categoría Authentication. Este plugin al igual que como lo hicimos con **Cors** lo agregaremos a nivel de la entidad del servicio products-service
+1. Para agregar el plugin **key-auth** nos aseguraremos de estar en la entidad services **products-service**, nos dirigimos a la opción plugins y elegimos la categoría **Authentication**, tal como lo hicimos con el plugins **Cors**
 
 ![Untitled](images/Untitled%2011.png)
 
 Los valores a considerar son los siguientes:
 
-**key names:** corresponde al nombre de parámetro por el cual el cliente enviara un token asociado a uno de los consumer.
+- **key names:** corresponde al nombre de parámetro por el cual el cliente enviará un token asociado a uno de los consumers
 
 **Ejemplo: api-key=token asociado al consumer**
 
