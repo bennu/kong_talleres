@@ -28,7 +28,7 @@ La instalación de Rancher Desktop lo haremos por medio del gestor de paquetes [
         Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
         ```
         
-    4.  Una vez completada la instalación,  podemos verificar ejecutado
+    4.  Una vez completada la instalación, podemos verificarlo ejecutando
         
         ```powershell
         choco -?
@@ -65,7 +65,7 @@ choco install rancher-desktop -y
 
 Si ya tiene instaladas algunas de las herramientas del listado, posiblemente se presenten conflictos de versiones.
 
-3. Instalación de deck
+3. Instalar deck (CLI de Kong)
 
 ```powershell
 curl.exe -sL https://github.com/kong/deck/releases/download/v1.38.1/deck_1.38.1_windows_amd64.tar.gz -o deck.tar.gz
