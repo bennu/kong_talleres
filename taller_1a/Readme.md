@@ -2,21 +2,21 @@
 
 **Objetivo:** Disponibilizar a nivel local Kong API Gateway con su respectiva interfaz de administración Konga
 
-**Nota:** Independiente del sistema operativo recomendamos usar Rancher Desktop por sobre Docker Desktop. Los pasos del taller 1 están pensados para Windows. 
+**Nota:** Independiente del sistema operativo recomendamos usar Rancher Desktop por sobre Docker Desktop. Los pasos de este taller están pensados para Windows. 
 
-Clonar repo
+**Clonar repo**
 
 ```powershell
 git clone https://github.com/bennu/kong_talleres.git
 ```
 
-## **Levantamiento de clúster  y herramientas necesarias para el taller**
+## **I. Levantamiento local de clúster Kubernetes (K8s) y herramientas necesarias para el taller**
 
-Para este taller utilizaremos Rancher Desktop. Para su instalación lo podemos hacer por medio de gestores de paquetes como [chocolatey](https://chocolatey.org/install#individual)
+La instalación de Rancher Desktop lo haremos por medio del gestor de paquetes [chocolatey](https://chocolatey.org/install#individual)
 
 1. Descargar e instalar gestor de paquetes chocolatey para Windows. Para más información ver documentación [chocolatey](https://chocolatey.org/install#individual) 
-    1. Abrir PowerShell en modo administrador
-    2. Ejecutar el siguiente comando:
+    1.  Abrir PowerShell en modo administrador
+    2.  Ejecutar el siguiente comando:
         
         ```powershell
         Set-ExecutionPolicy Bypass -Scope Process
@@ -28,7 +28,7 @@ Para este taller utilizaremos Rancher Desktop. Para su instalación lo podemos h
         Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
         ```
         
-    4. Una vez completada la instalación,  podemos verificar ejecutado
+    4.  Una vez completada la instalación,  podemos verificar ejecutado
         
         ```powershell
         choco -?
@@ -50,22 +50,22 @@ Para este taller utilizaremos Rancher Desktop. Para su instalación lo podemos h
         ```
         
 
-1. Instalar Rancher Desktop usando gesto de paquete chocolatey en Windows: 
+2. Instalar Rancher Desktop usando el gestor de paquetes chocolatey para Windows: 
 
 ```powershell
 choco install rancher-desktop -y
 ```
 
-Nota: Rancher Desktop viene con las siguientes herramientas encapsula dentro de la misma solución:
+**Nota:** Rancher Desktop viene con las siguientes herramientas pre-instaladas:
 
 - nerdctl
 - kubectl
 - Helm
 - Docker cli
 
-Esto podría afectar si tiene ya instalada las herramientas mencionadas en la lista anterior
+Si ya tiene instaladas algunas de las herramientas del listado, posiblemente se presenten conflictos de versiones.
 
-1. Instalación de deck
+3. Instalación de deck
 
 ```powershell
 curl.exe -sL https://github.com/kong/deck/releases/download/v1.38.1/deck_1.38.1_windows_amd64.tar.gz -o deck.tar.gz
@@ -74,23 +74,24 @@ tar -xf deck.tar.gz -C deck
 powershell -command "[Environment]::SetEnvironmentVariable('Path', [Environment]::GetEnvironmentVariable('Path', 'User') + [IO.Path]::PathSeparator + [System.IO.Directory]::GetCurrentDirectory() + '\deck', 'User')"
 ```
 
-## **Instalación de Kong 2.8  y Konga sobre Kubernetes**
+## **II. Instalación de Kong 2.8 y Konga sobre Kubernetes**
 
-Agregar repo Helm chart de kong
+### Kong 2.8
+
+1. Agregar Helm chart de Kong
 
 ```powershell
 helm repo update
 helm repo add kong https://charts.konghq.com
 ```
 
-Instalar Kong versión 2.8 a través de helm chart
-
+2. Posicionarnos en el repositorio previamente clonado e instalar Kong versión 2.8 a través de Helm chart
+   
 ```powershell
-
 helm install kong kong/kong -f taller_1a/kong_2.8/values.yaml
 ```
 
-Verificar que se haya desplegado correctamente Kong  
+3. Verificar que Kong se haya desplegado correctamente
 
 ```powershell
 kubectl get pod --selector=app.kubernetes.io/instance=kong -w
@@ -104,45 +105,43 @@ pod/kong-kong-init-migrations-hsjhd   0/1     Completed   0          2m11s
 pod/kong-kong-6547687c46-8cj4r        1/1     Running     0          2m11s
 ```
 
-Konga
+### Konga
 
-Instalación Konga
+1. Instalar interfaz de administración Konga
 
 ```powershell
 kubectl apply -f taller_1a/konga/deployment.yaml
 ```
 
-Verificar que se esté ejecutando el pod de konga
+2. Verificar que el pod de Konga se está ejecutando correctamente
 
 ```powershell
 kubectl get pods --selector=app=konga -w
 ```
 
-Se debe acceder al interfaz generando un port-forward del servicio llamado Konga
-
-exponer interfaz de administración - Konga
+3. Para acceder a la interfaz de Konga es necesario generar un port forward del servicio
 
 ```powershell
 kubectl port-forward service/konga 8080:80
 ```
 
-Acceder a la siguiente URL  desde el navegador
+4. Acceder a la siguiente URL desde el navegador
 
 ```powershell
  http://localhost:8080
 ```
 
-Se debe crear una cuenta de administración para utilizar Konga
+5. Se debe crear una cuenta de administración para utilizar Konga
 
 ![Untitled](./images/0.png)
 
-Una vez creada la cuenta se debe iniciar sesión 
+6. Una vez creada la cuenta se debe iniciar sesión 
 
 ![Untitled](./images/1.png)
 
-Conectar Kong Admin API con interfaz Konga
+7. Conectar Kong Admin API con interfaz Konga
 
-Se puede utilizar el DNS de Kubernetes si está en el mismo clúster más el puerto que se expone el servicio, en este caso:
+**Nota:** Se puede utilizar el DNS de K8s si está en el mismo clúster más el puerto que se expone el servicio, tal como se muestra en la siguiente URL:
 
 ```powershell
 http://kong-kong-admin.default:8001
@@ -150,6 +149,6 @@ http://kong-kong-admin.default:8001
 
 ![Untitled](./images/2.png)
 
-Podemos validar si se conectó correctamente a la Admin API de Kong viendo el número de conexiones activa y la versión de Kong 
+8. Podemos validar si se conectó correctamente al Admin API de Kong viendo el número de conexiones activas y la versión de Kong 
 
 ![Untitled](./images/3.png)
