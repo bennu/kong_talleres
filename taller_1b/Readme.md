@@ -157,7 +157,7 @@ Como definimos la manera de como se autenticarán a nuestro servicio ó API medi
 
 ![Untitled](images/Untitled%2018.png)
 
-4. Seleccionamos el valor de api-key generado para confirmar si el consumer puede acceder al servicio ó API
+4. Se debe copiar el token de api-key generado que se utilizará más adelante. 
 
 ![Untitled](images/Untitled%2019.png)
 
