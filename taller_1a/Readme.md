@@ -1,4 +1,4 @@
-# Taller 1 - Instalación
+# Taller 1a - Instalación
 
 **Objetivo:** Disponibilizar a nivel local Kong API Gateway con su respectiva interfaz de administración Konga
 
