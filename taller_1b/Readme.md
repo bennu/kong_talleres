@@ -6,19 +6,19 @@ Para poder iniciar el taller se necesita exponer los siguientes servicios de man
 
 **a) API Gateway**
 
-```bash
+```powershell
 kubectl port-forward service/kong-kong-proxy 8000:80 
 ```
 
 **b) Admin API**
 
-```bash
+```powershell
 kubectl port-forward service/kong-kong-admin 8001:8001 
 ```
 
 **c) Konga**
 
-```bash
+```powershell
 kubectl port-forward service/konga 8080:80 
 ```
 
@@ -183,88 +183,77 @@ Como definimos la manera de como se autenticarán a nuestro servicio ó API medi
 
 cURL es una herramienta de línea de comandos que interactuar con la Admin API de Kong, permitiendo realizar solicitudes HTTP.
 
-1. Crear un nuevo route con nombre “lista-productos” asociado al service products-service que sumará al route “productos” que creamos desde Konga
+1. Crear un nuevo route con nombre ***lista-productos*** asociado al service ***products-service** que sumará al route ***productos*** que creamos desde Konga
 
 ```powershell
-$ curl -i -X POST http://localhost:8001/services/products-service/routes \
-     --data 'paths[]=/lista-productos' \
+curl.exe -i -X POST http://localhost:8001/services/products-service/routes `
+     --data 'paths[]=/lista-productos' `
      --data name=products_route
 ```
 
 Los parámetros a destacar en este ejemplo son:
-
 - **paths:**  Contiene la  ruta por donde se va a exponer el servicio al consumidor
 - **name:**  Nombre para identificar el route que se va crear
 
-2. Restringir los métodos configurados de CORS a service products-service, limitándolos solo a GET y POST. Para esto se debe buscar el ID del plugin Cors asociado al servicio
+2. Restringir los métodos configurados de CORS a service products-service, limitándolos solo a GET y POST. Para esto se debe buscar el ID del plugin Cors asociado al servicio mediante un curl
 
-```bash
-curl -X GET http://localhost:8001/services/products-service/plugins 
+```powershell
+curl.exe -X GET http://localhost:8001/services/products-service/plugins
 ```
 
-![Untitled](images/Untitled%2023.png)
+Deberíamos copiar el valor del key id relacionado al cors
 
-```bash
-curl -X PATCH  --url http://localhost:8001/services/products-service/plugins/<plugin id> \
-   --header "accept: application/json" \
-   --header "Content-Type: application/json" \
-   --data '
- {
-  "name": "cors",
-  "config": {
-    "origins": [
-      "*"
-    ],
-    "methods": [
-      "GET",
-      "POST"
-    ],
-    "headers": [
-      "Accept",
-      "Accept-Version",
-      "Content-Length",
-      "Content-MD5",
-      "Content-Type",
-      "Date",
-      "X-Auth-Token"
-    ],
-    "exposed_headers": [
-      "X-Auth-Token"[https://konghq.com/blog/learning-center/what-is-api-security](https://konghq.com/blog/learning-center/what-is-api-security)
-    ],
-    "credentials": true,
-    "max_age": 3600
-  }
-}
-   '
+Resultado de la ejecuccion comando curl
+```powershell
+
+{"data":[{"consumer":null,"name":"cors","id":"18e1cd4c-9774-40d7-9c7a-2ab8723ed568","config":{"credentials":false,"headers":null,"origins":["*"],"exposed_headers":null,"preflight_continue":false,"methods":["GET","HEAD","PUT","PATCH","POST","DELETE","OPTIONS","TRACE","CONNECT"],"
+max_age":null},"tags":null,"created_at":1722556688,"service":{"id":"a1e24b40-82be-4a2d-9d9f-82499de97b7f"},"route":null,"protocols":["grpc","grpcs","http","https"],"enabled":true},{"consumer":null,"name":"rate-limiting","id":"1ad14c9b-dfeb-46d1-b9af-8c6199559e1a","config":{"poli
+cy":"local","second":null,"minute":5,"hour":null,"day":null,"month":null,"year":null,"redis_username":null,"redis_password":null,"path":null,"redis_host":null,"redis_timeout":2000,"redis_ssl":false,"redis_ssl_verify":false,"redis_server_name":null,"redis_database":0,"header_name
+":null,"redis_port":6379,"fault_tolerant":true,"hide_client_headers":false,"limit_by":"consumer"},"tags":null,"created_at":1722555798,"service":{"id":"a1e24b40-82be-4a2d-9d9f-82499de97b7f"},"route":null,"protocols":["grpc","grpcs","http","https"],"enabled":true},{"consumer":null
+,"name":"acl","id":"36f14157-18a7-4c44-9995-f0e4d26a7eb4","config":{"deny":null,"allow":["admin"],"hide_groups_header":false},"tags":null,"created_at":1722559905,"service":{"id":"a1e24b40-82be-4a2d-9d9f-82499de97b7f"},"route":null,"protocols":["grpc","grpcs","http","https"],"ena
+bled":true},{"consumer":null,"name":"key-auth","id":"882ca569-d1fa-499a-ba1c-1360f5d19f63","config":{"hide_credentials":false,"key_in_header":true,"key_in_query":true,"key_in_body":false,"run_on_preflight":true,"key_names":["apikey"],"anonymous":null},"tags":null,"created_at":17
+22558099,"service":{"id":"a1e24b40-82be-4a2d-9d9f-82499de97b7f"},"route":null,"protocols":["grpc","grpcs","http","https"],"enabled":true}],"next":null}
+
 ```
 
-3. Modificar los parámetros del plugins rate-limit cambiando la frecuencia de consulta al servicio de 5 a 10 min 
+Una vez copiado el ID, lo usamos para modificar las configuraciones CORS
+```powershell
+curl.exe -i -X PATCH `
+--url http://localhost:8001/services/products-service/plugins/<plugin id> `
+--data 'name=cors' `
+--data 'config.origins=*' `
+--data 'config.methods=GET' `
+--data 'config.methods=POST' `
+--data 'config.headers=Accept'  `
+--data 'config.headers=Authorization'  `
+--data 'config.headers=Content-Type'  `
+--data 'config.credentials=true'  `
+--data 'config.max_age=3600'
+```
 
-```bash
-curl -X PATCH --url http://localhost:8001/services/products-service/plugins/<plugin id> \
-   --header "accept: application/json" \
-   --header "Content-Type: application/json" \
-   --data '
-   {
- "name": "rate-limiting",
- "config": {
-   "minute": 10,
-   "policy": "local"
- }
-}
-   '
+3. Modificar los parámetros del plugins rate-limit cambiando el numero maximo de consulta al servicio de 5 a 10 peticiones por minutos
+
+```powershell
+curl.exe -i -X PATCH `
+  --url http://localhost:8001/services/products-service/plugins/<plugin id> `
+  --data 'name=rate-limiting' `
+  --data 'config.minute=10' `
+  --data 'config.policy=local'
 ```
 
 4. Podemos observar que la última petición arroja un código de estado **“429 too many request”**
 
-```bash
-for _ in {1..11}; do {curl -I http://localhost:8000/productos\?apikey\<token>; sleep 1;}  done
+```powershell
+ for ($i=1; $i -le 11; $i++) {
+     curl.exe -I http://localhost:8000/productos?apikey=<token>
+     Start-Sleep -Seconds 1
+ }
 ```
 
 5. Configurar nuevo consumer con el nombre **dev** 
 
-```bash
-curl -i -X POST http://localhost:8001/consumers/ \
+```powershell
+curl.exe -i -X POST http://localhost:8001/consumers `
   --data username=dev
 ```
 
@@ -272,81 +261,61 @@ curl -i -X POST http://localhost:8001/consumers/ \
 
 6. Si creamos un API key sin ningún parámetro, este generará un valor aleatorio como token
 
-```bash
-curl -i -X POST http://localhost:8001/consumers/app/key-auth
+```powershell
+curl.exe -i -X POST http://localhost:8001/consumers/dev/key-auth
 ```
 
-7. Otra opción, sería setear un token en caso de ser necesario
+7. Otra alternativa , sería setear un valor en caso de ser necesario
 
-```bash
-curl -i -X POST http://localhost:8001/consumers/app/key-auth \
+```powershell
+curl.exe -i -X POST http://localhost:8001/consumers/dev/key-auth  `
   --data key=top-secret-key
 ```
 
 8. Agregar **consumer** a un grupo de consumers
 
-```bash
- curl -X POST http://localhost:8001/consumers/{CONSUMER}/acls \
+```powershell
+ curl.exe -X POST http://localhost:8001/consumers/dev/acls  `
     --data "group=dev"
 ```
 
 9. En este caso, es importante considerar que el consumer dev no podrá acceder con su apikey para consumir el servicio **service-products** dado la regla ACL que solo otorga la autorización al grupo de consumers **admin**. Para esto agregaremos el consumer **dev** al grupo consumers **dev** al listado de consumers permitidos
 
-```bash
-curl -X PATCH --url http://localhost:8001/services/products-service/plugins/<id plugin> \
-   --header "accept: application/json" \
-   --header "Content-Type: application/json" \
-    --data '
-    {
-  "name": "acl",
-  "config": {
-    "allow": [
-      "admin",
-      "dev"
-    ],                        
-    "hide_groups_header": false
-  }
-}    
-    '
+```powershell
+curl.exe -i -X PATCH `
+--url http://localhost:8001/services/products-service/plugins/7b0bc880-d730-45af-ad79-9ea0d81bb245 `
+--data 'name=acl' `
+--data 'config.allow=admin' `
+--data 'config.allow=dev' `
+--data 'config.hide_groups_header=false' 
 ```
 
 10. Podemos validar si podemos acceder ingresando de la siguiente forma  
 
-```
+```powershell
 curl http://localhost:8000/productos?apikey=<apikey generado anteriormente>
 ```
 
 ## III. deck
 
-1. Se expone Admin API
+1. Generar un dump de las configuraciones de Kong , se va crear un archivos llamado “kong.yaml”
 
 ```powershell
-kubectl port-forward service/kong-kong-admin 8001:8001 &
+deck.exe dump         
 ```
 
-2. Generar un dump de las configuraciones de Kong , se va crear un archivos llamado “kong.yaml”
-
-```powershell
-λ ~/ deck dump         
-Info: 'deck dump' functionality has moved to 'deck gateway dump' and will be removed
-in a future MAJOR version of deck. Migration to 'deck gateway dump' is recommended.
-   Note: - see 'deck gateway dump --help' for changes to the command
-         - the default changed from 'kong.yaml' to '-' (stdin/stdout)
-
-```
-
-3. Abrir archivos generado por dump y buscar el route productos
+2. Abrir archivos generado por dump y buscar el route productos
 
 ![Untitled](images/Untitled%2024.png)
 
-4. Cambiar path /productos por /products
+3. Cambiar path /productos por /products
 
 ![Untitled](images/Untitled%2025.png)
 
-5. Para aplicar los cambios, ejecutar el siguiente comando
+4. Para aplicar los cambios, ejecutar el siguiente comando
 
 ```powershell
-deck sync
+deck.exe sync
 ```
 
 **Resultado**
@@ -383,8 +352,8 @@ Summary:
 
 ```
 
-6. Podemos validar el cambio ingresando a path /products
+5. Podemos validar el cambio ingresando a path /products
 
-```bash
-curl http://localhost:8000/products\?apikey=<Token>
+```powershell
+curl.exe http://localhost:8000/products?apikey=<Token>
 ```
