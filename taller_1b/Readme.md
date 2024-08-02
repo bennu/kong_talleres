@@ -157,7 +157,7 @@ Como definimos la manera de como se autenticarán a nuestro servicio ó API medi
 
 ![Untitled](images/Untitled%2018.png)
 
-4. Se debe copiar el token de api-key generado que se utilizará más adelante. 
+4. Se debe copiar el valor del api-key generado que se utilizará más adelante. 
 
 ![Untitled](images/Untitled%2019.png)
 
