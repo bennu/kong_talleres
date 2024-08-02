@@ -60,13 +60,12 @@ Los valores que se deben considerar son los siguientes:
 
 Una vez expuesto el API, es necesario definir como será consumido (tratamiento)
 
-Lo primero que definiremos será el control del tráfico, limitando los orígenes de los que consumirán nuestro servicio ó API expuesto desde Kong y como estos se autenticarán. Para ello usaremos los plugins **rate-limit**, **cors** y **key-auth**. Estos los agregaremos a nivel de servicios y se definirá un policy del tipo local para todos. 
+Lo primero que definiremos será el control del tráfico, limitando los orígenes de los que consumirán nuestro servicio ó API expuesto desde Kong y como estos se autenticarán. Para ello usaremos los plugins **rate-limit**, **Cors**, **key-auth** y **ACL**. Estos los agregaremos a nivel de la entidad **services** y se definirá un policy del tipo local para todos. 
 
-Como se observa este plugin lo asociamos a nivel del services **products-service**
 
 ### **- rate-limit:**
 
-1. Nos dirigiremos a products-service, luego seleccionamos la opción plugins, elegimos la categoría Traffic Control y seleccionamos el plugin **rate-limit**.  
+1. Nos dirigiremos al services **products-service**, luego seleccionamos la opción plugins, elegimos la categoría Traffic Control y seleccionamos el plugin **rate-limit**.  
 
 ![Untitled](images/Untitled%205.png)
 
@@ -95,7 +94,7 @@ En la 6ª petición debería mostrarse el error 429 como código de estado, esto
 
 ![Untitled](images/Untitled%208.png)
 
-2. Seleccionar la categoría **Security** y el plugin llamado **Cors**
+2. Seleccionamos la categoría **Security** y el plugin llamado **Cors**
 
 ![Untitled](images/Untitled%209.png)
 
@@ -114,53 +113,51 @@ En la 6ª petición debería mostrarse el error 429 como código de estado, esto
 
 ![Untitled](images/Untitled%2011.png)
 
-Los valores a considerar son los siguientes:
-
+2. Los valores a considerar son los siguientes:
+ 
 - **key names:** corresponde al nombre de parámetro por el cual el cliente enviará un token asociado a uno de los consumers
 
-**Ejemplo: api-key=token asociado al consumer**
+**Ejemplo:** api-key = token asociado al consumers
 
-Para este caso el campo  key names, lo dejaremos vacío para que tome  “**apikey” como nombre por defecto**  
+Para este caso el campo key names, lo dejaremos vacío para que tome “**"apikey”** como nombre por defecto  
 
 ![Untitled](images/Untitled%2012.png)
 
-### ACL
+### **- ACL**
 
-El plugin ACL (autorización) forma parte de la gestión de identidad y de acceso a un sistema. El ACL define el tipo de acceso para que se pueda acceder a un determinado servicio ó API. Por ejemplo, un consumer que tenga creado un API Key, que no pertenezca a un grupo de consumers y que intente acceder a los servicios de **service-products**, ****no le va a ser posible, puesto que la regla ACL está configurada para que solo permita la autorización a un grupo de consumers.
+El plugin ACL (autorización) forma parte de la gestión de identidad y de acceso a un sistema. El ACL define el tipo de acceso para que se pueda acceder a un determinado servicio ó API. Por ejemplo, un consumer que tenga creado un API Key, que no pertenezca a un grupo de consumers y que intente acceder al services **products-service**, no le va a ser posible, puesto que la regla ACL está configurada para que solo permita la autorización a un grupo de consumers.
 
-En este caso configuraremos el plugin ACL a nivel de  produtcs-service 
+En este caso configuraremos el plugin ACL a nivel de **products-service** 
 
 ![Untitled](images/Untitled%2013.png)
 
 Importante tener en cuenta los siguientes parámetros:
 
-**allow:** admin (hacer referencia grupo de consumers), en este caso  se va a permitir solo al grupo admin 
-
-**deny:**  permite denegar el acceso a un grupo, tal como indica su nombre
-
-**hide groups header:**  determina si se envía el encabezado X-Consumer-Groups a servicio ascendente
+- **allow:** admin (hace referencia a un grupo de consumers), en este caso se va a permitir solo al grupo admin 
+- **deny:**  permite denegar el acceso a un grupo, tal como indica su nombre
+- **hide groups header:**  determina si se envía el encabezado X-Consumer-Groups a servicio ascendente
 
 ![Untitled](images/Untitled%2014.png)
 
 ### D) Consumers
 
-Como definimos la manera de como se autenticarán a nuestro servicio ó API con key-auth, es necesario crear un consumer al que asociaremos un api-key para que se pueda acceder al servicio
+Como definimos la manera de como se autenticarán a nuestro servicio ó API mediante key-auth, es necesario crear un consumer al que asociaremos un api-key para que autorice su acceso al servicio
 
-1. Sé crear un consumer de nombre **app**
+1. Crear un consumer de nombre **app**
 
 ![Untitled](images/Untitled%2015.png)
 
 ![Untitled](images/Untitled%2016.png)
 
-1. Dentro del consumer **app**, nos dirigimos a la opción  Credentials y desde ahí creamos un api-key
+1. Dentro del consumer **app**, nos dirigiremos a la opción Credentials y desde ahí creamos un api-key
 
 ![Untitled](images/Untitled%2017.png)
 
-1. Para este ejemplo dejaremos el campo key vacío para que kong genere un valor aleatorio 
+1. Para este ejemplo dejaremos el campo key vacío para que Kong genere un valor aleatorio 
 
 ![Untitled](images/Untitled%2018.png)
 
-1. Seleccionamos el valor de api-key generado para confirmar si el consumer puede acceder al servicio o API
+1. Seleccionamos el valor de api-key generado para confirmar si el consumer puede acceder al servicio ó API
 
 ![Untitled](images/Untitled%2019.png)
 
