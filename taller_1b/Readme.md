@@ -141,7 +141,7 @@ Importante tener en cuenta los siguientes parámetros:
 
 ### D) Consumers
 
-Como definimos la manera de como se autenticarán a nuestro servicio ó API mediante key-auth, es necesario crear un consumer al que asociaremos un api-key para que autorice su acceso al servicio
+Como definimos la manera de como se autenticarán a nuestro servicio ó API mediante key-auth, es necesario crear un consumer al que asociaremos un api-key para que autorice su acceso al services **products-service**
 
 1. Crear un consumer de nombre **app**
 
@@ -149,31 +149,33 @@ Como definimos la manera de como se autenticarán a nuestro servicio ó API medi
 
 ![Untitled](images/Untitled%2016.png)
 
-1. Dentro del consumer **app**, nos dirigiremos a la opción Credentials y desde ahí creamos un api-key
+2. Dentro del consumer **app**, nos dirigiremos a la opción Credentials y desde ahí creamos un api-key
 
 ![Untitled](images/Untitled%2017.png)
 
-1. Para este ejemplo dejaremos el campo key vacío para que Kong genere un valor aleatorio 
+3. Para este ejemplo dejaremos el campo key vacío para que Kong genere un valor aleatorio 
 
 ![Untitled](images/Untitled%2018.png)
 
-1. Seleccionamos el valor de api-key generado para confirmar si el consumer puede acceder al servicio ó API
+4. Seleccionamos el valor de api-key generado para confirmar si el consumer puede acceder al servicio ó API
 
 ![Untitled](images/Untitled%2019.png)
 
-1. Para este ejemplo se agregará el consumer **app** al grupo consumers (**admin**) permitidos por el ACL 
 
-1. Agregar consumer **app** un grupo de consumers
+> Nota: Para este ejemplo se agregará el consumer **app** al grupo consumers (**admin**) permitidos por el ACL
+> 
+
+
+5. Agregar consumer **app** a un grupo de consumers
 
 ![Untitled](images/Untitled%2020.png)
 
- 
 
-b. El grupo de consumers se llama `admin`
+6. El grupo de consumers se llama `admin`
 
 ![Untitled](images/Untitled%2021.png)
 
-1. Para confirmar que podemos acceder al servicio, desde el navegador apuntamos a la siguiente URL  **`http://localhost:8000/productos?apikey=<api key>`,** en ella se debe mostrar un listado de productos en formato JSON tal como se muestra en la imagen
+7. Para confirmar que podemos acceder al servicio. Desde el navegador apuntamos la siguiente URL  **`http://localhost:8000/productos?apikey=<api key>`**, en ella se debiese mostrar un listado de productos en formato JSON tal como se observa en la imagen
 
 ![Untitled](images/Untitled%2022.png)
 
@@ -194,7 +196,7 @@ Los parámetros a destacar en este ejemplo son:
 - **paths:**  Contiene la  ruta por donde se va a exponer el servicio al consumidor
 - **name:**  Nombre para identificar el route que se va crear
 
-1. Restringir los métodos configurados de CORS a service products-service, limitándolos solo a GET y POST. Para esto se debe buscar el ID del plugin Cors asociado al servicio
+2. Restringir los métodos configurados de CORS a service products-service, limitándolos solo a GET y POST. Para esto se debe buscar el ID del plugin Cors asociado al servicio
 
 ```bash
 curl -X GET http://localhost:8001/services/products-service/plugins 
@@ -236,7 +238,7 @@ curl -X PATCH  --url http://localhost:8001/services/products-service/plugins/<pl
    '
 ```
 
-1. Modificar los parámetros del plugins rate-limit cambiando la frecuencia de consulta al servicio de 5 a 10 min 
+3. Modificar los parámetros del plugins rate-limit cambiando la frecuencia de consulta al servicio de 5 a 10 min 
 
 ```bash
 curl -X PATCH --url http://localhost:8001/services/products-service/plugins/<plugin id> \
@@ -253,13 +255,13 @@ curl -X PATCH --url http://localhost:8001/services/products-service/plugins/<plu
    '
 ```
 
-1. Podemos observar que la última petición arroja un código de estado **“429 too many request”**
+4. Podemos observar que la última petición arroja un código de estado **“429 too many request”**
 
 ```bash
 for _ in {1..11}; do {curl -I http://localhost:8000/productos\?apikey\<token>; sleep 1;}  done
 ```
 
-1. Configurar nuevo consumer con el nombre **dev** 
+5. Configurar nuevo consumer con el nombre **dev** 
 
 ```bash
 curl -i -X POST http://localhost:8001/consumers/ \
@@ -268,27 +270,27 @@ curl -i -X POST http://localhost:8001/consumers/ \
 
 **Recordar que ya tenemos otro consumer de nombre **app**
 
-1. Si creamos un API key sin ningún parámetro, este generará un valor aleatorio como token
+6. Si creamos un API key sin ningún parámetro, este generará un valor aleatorio como token
 
 ```bash
 curl -i -X POST http://localhost:8001/consumers/app/key-auth
 ```
 
-1. Otra opción, sería setear un token en caso de ser necesario
+7. Otra opción, sería setear un token en caso de ser necesario
 
 ```bash
 curl -i -X POST http://localhost:8001/consumers/app/key-auth \
   --data key=top-secret-key
 ```
 
-1. Agregar **consumer** a un grupo de consumers
+8. Agregar **consumer** a un grupo de consumers
 
 ```bash
  curl -X POST http://localhost:8001/consumers/{CONSUMER}/acls \
     --data "group=dev"
 ```
 
-1. En este caso, es importante considerar que el consumer dev no podrá acceder con su apikey para consumir el servicio **service-products** dado la regla ACL que solo otorga la autorización al grupo de consumers **admin**. Para esto agregaremos el consumer **dev** al grupo consumers **dev** al listado de consumers permitidos
+9. En este caso, es importante considerar que el consumer dev no podrá acceder con su apikey para consumir el servicio **service-products** dado la regla ACL que solo otorga la autorización al grupo de consumers **admin**. Para esto agregaremos el consumer **dev** al grupo consumers **dev** al listado de consumers permitidos
 
 ```bash
 curl -X PATCH --url http://localhost:8001/services/products-service/plugins/<id plugin> \
@@ -308,7 +310,7 @@ curl -X PATCH --url http://localhost:8001/services/products-service/plugins/<id 
     '
 ```
 
-1. Podemos validar si podemos acceder ingresando de la siguiente forma  
+10. Podemos validar si podemos acceder ingresando de la siguiente forma  
 
 ```
 curl http://localhost:8000/productos?apikey=<apikey generado anteriormente>
@@ -322,7 +324,7 @@ curl http://localhost:8000/productos?apikey=<apikey generado anteriormente>
 kubectl port-forward service/kong-kong-admin 8001:8001 &
 ```
 
-1. Generar un dump de las configuraciones de Kong , se va crear un archivos llamado “kong.yaml”
+2. Generar un dump de las configuraciones de Kong , se va crear un archivos llamado “kong.yaml”
 
 ```powershell
 λ ~/ deck dump         
@@ -333,15 +335,15 @@ in a future MAJOR version of deck. Migration to 'deck gateway dump' is recommend
 
 ```
 
-1. Abrir archivos generado por dump y buscar el route productos
+3. Abrir archivos generado por dump y buscar el route productos
 
 ![Untitled](images/Untitled%2024.png)
 
-1. Cambiar path /productos por /products
+4. Cambiar path /productos por /products
 
 ![Untitled](images/Untitled%2025.png)
 
-1. Para aplicar los cambios, ejecutar el siguiente comando
+5. Para aplicar los cambios, ejecutar el siguiente comando
 
 ```powershell
 deck sync
@@ -381,7 +383,7 @@ Summary:
 
 ```
 
-1. Podemos validar el cambio ingresando a path /products
+6. Podemos validar el cambio ingresando a path /products
 
 ```bash
 curl http://localhost:8000/products\?apikey=<Token>
