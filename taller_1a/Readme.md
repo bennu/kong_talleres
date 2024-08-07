@@ -26,9 +26,8 @@ Si ya tiene instaladas algunas de las herramientas del listado, posiblemente se 
 3. Instalar deck (CLI de Kong)
 
 ```powershell
-curl.exe -sL https://github.com/kong/deck/releases/download/v1.38.1/deck_1.38.1_windows_amd64.tar.gz -o deck.tar.gz
-mkdir deck
-tar -xf deck.tar.gz -C deck
+brew tap kong/deck
+brew install deck
 ```
 
 ## **II. Instalación de Kong 2.8 y Konga sobre Kubernetes**
