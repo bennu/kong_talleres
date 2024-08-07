@@ -12,49 +12,7 @@ git clone https://github.com/bennu/kong_talleres.git
 
 ## **I. Levantamiento local de clúster Kubernetes (K8s) y herramientas necesarias para el taller**
 
-La instalación de Rancher Desktop lo haremos por medio del gestor de paquetes [chocolatey](https://chocolatey.org/install#individual)
-
-1. Descargar e instalar gestor de paquetes chocolatey para Windows. Para más información ver documentación [chocolatey](https://chocolatey.org/install#individual) 
-    1.  Abrir PowerShell en modo administrador
-    2.  Ejecutar el siguiente comando:
-        
-        ```powershell
-        Set-ExecutionPolicy Bypass -Scope Process
-        ```
-        
-    3.  Ejecutar el siguiente comando para instalar Chocolatey
-        
-        ```powershell
-        Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
-        ```
-        
-    4.  Una vez completada la instalación, podemos verificarlo ejecutando
-        
-        ```powershell
-        choco -?
-        ```
-        
-        Resultado
-        
-        ```powershell
-           .....
-             --skipcompatibilitychecks, --skip-compatibility-checks
-             SkipCompatibilityChecks - Prevent warnings being shown before and after
-               command execution when a runtime compatibility problem is found between
-               the version of Chocolatey and the Chocolatey Licensed Extension.
-        
-             --ignore-http-cache
-             IgnoreHttpCache - Ignore any HTTP caches that have previously been
-               created when querying sources, and create new caches. Available in 2.1.0+
-        Chocolatey v2.3.0
-        ```
-        
-
-2. Instalar Rancher Desktop usando el gestor de paquetes chocolatey para Windows: 
-
-```powershell
-choco install rancher-desktop -y
-```
+1. Instalar Rancher Desktop desde https://github.com/rancher-sandbox/rancher-desktop/releases/download/v1.15.0/Rancher.Desktop-1.15.0.x86_64.dmg
 
 **Nota:** Rancher Desktop viene con las siguientes herramientas pre-instaladas:
 
@@ -71,7 +29,6 @@ Si ya tiene instaladas algunas de las herramientas del listado, posiblemente se 
 curl.exe -sL https://github.com/kong/deck/releases/download/v1.38.1/deck_1.38.1_windows_amd64.tar.gz -o deck.tar.gz
 mkdir deck
 tar -xf deck.tar.gz -C deck
-powershell -command "[Environment]::SetEnvironmentVariable('Path', [Environment]::GetEnvironmentVariable('Path', 'User') + [IO.Path]::PathSeparator + [System.IO.Directory]::GetCurrentDirectory() + '\deck', 'User')"
 ```
 
 ## **II. Instalación de Kong 2.8 y Konga sobre Kubernetes**
