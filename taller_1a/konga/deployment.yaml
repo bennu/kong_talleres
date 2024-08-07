@@ -27,29 +27,29 @@ spec:
       restartPolicy: Always
       volumes:
       #minikube
-      - name: root-volume
-        hostPath:
-          path: /mnt/konga 
-          type: DirectoryOrCreate
-      #rancher desktop 
       # - name: root-volume
-      #   persistentVolumeClaim:
-      #     claimName: local-volume-pvc
+      #   hostPath:
+      #     path: /mnt/konga 
+      #     type: DirectoryOrCreate
+      #rancher desktop 
+      - name: root-volume
+        persistentVolumeClaim:
+          claimName: local-volume-pvc
 ---
 #rancher desktop
-# apiVersion: v1
-# kind: PersistentVolumeClaim
-# metadata:
-#   name: local-volume-pvc
-#   annotations:
-#     volumeType: local
-# spec:
-#   accessModes:
-#     - ReadWriteOnce
-#   storageClassName: local-path
-#   resources:
-#     requests:
-#       storage: 250Mi
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: local-volume-pvc
+  annotations:
+    volumeType: local
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-path
+  resources:
+    requests:
+      storage: 250Mi
 ---
 apiVersion: v1
 kind: ConfigMap
