@@ -1,10 +1,10 @@
 # Taller 2 - Observabilidad
 
-objetivo: 
+**Objetivo:** Levantar un flujo de observabilidad (métricas, logs y tracing) para visibilizar el tráfico y rendimiento de Kong API Gateway
 
- 
 
-Para poder iniciar el taller se necesita exponer los siguientes servicios de manera local, exponiendo el API Gateway y Admin API de Kong
+## I. Pre-requisitos:
+Para poder iniciar el taller se necesita exponer los siguientes servicios de manera local:
 
 **a) API Gateway**
 
@@ -24,11 +24,11 @@ kubectl port-forward service/kong-kong-admin 8001:8001 &
 kubectl port-forward service/konga 8080:80 &
 ```
 
-Prometheus (métricas)
+## II. Métricas (Prometheus)
 
 1. Instalación de plugins Prometheus
 
-opción 1 -  configuración global mediante cURL
+Opción 1 - Configuración global mediante cURL
 
 ```jsx
 curl -X POST http://localhost:8001/plugins/ \
@@ -44,13 +44,13 @@ curl -X POST http://localhost:8001/plugins/ \
     '
 ```
 
-opción 2 - instalación global  mediante interfaz Konga
+Opción 2 - Instalación global  mediante interfaz Konga
 
-el plugins se encuentra en la sección de análisis y monitoreo
+El plugins se encuentra en la sección de análisis y monitoreo
 
 ![Untitled](images/Untitled.png)
 
-**peer consumers**:  recopila si debe recopilar metricas por consumidor
+**peer consumers**: recopila si debe recopilar metricas por consumidor
 
 ![Untitled](images/Untitled%201.png)
 
@@ -129,7 +129,7 @@ Ver gráficos
 
 Dentro de este gráficos las métricas a destacar son: 
 
-Loggly (logs)
+## III. Logs (Loggly)
 
 Creacion de cuenta en solarwings loggly
 
@@ -177,7 +177,7 @@ Se puede visualizar los logs en formato Json que tiene como origen el kong Api G
 
 dashboard  
 
-ZIPKIN (tracing)
+## IV. Tracing (Zipkin)
 
 Instalación de zipkin
 
