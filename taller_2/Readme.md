@@ -8,20 +8,20 @@ Para poder iniciar el taller se necesita exponer los siguientes servicios de man
 
 **a) API Gateway**
 
-```bash
-kubectl port-forward service/kong-kong-proxy 8000:80 &
+```powershell
+kubectl port-forward service/kong-kong-proxy 8000:80 
 ```
 
 **b) Admin API**
 
-```bash
-kubectl port-forward service/kong-kong-admin 8001:8001 &
+```powershell
+kubectl port-forward service/kong-kong-admin 8001:8001 
 ```
 
 **c) Konga**
 
-```bash
-kubectl port-forward service/konga 8080:80 &
+```powershell
+kubectl port-forward service/konga 8080:80 
 ```
 
 ## II. Métricas (Prometheus)
@@ -30,18 +30,10 @@ kubectl port-forward service/konga 8080:80 &
 
 Opción 1 - Configuración global mediante cURL
 
-```jsx
-curl -X POST http://localhost:8001/plugins/ \
-    --header "accept: application/json" \
-    --header "Content-Type: application/json" \
-    --data '
-    {
-  "name": "prometheus",
-  "config": {
-    "per_consumer": true
-  }
-}
-    '
+```powershell
+curl.exe -i -X POST http://localhost:8001/plugins/ `
+--data 'name=prometheus' `
+--data 'config.per_consumer=true' 
 ```
 
 Opción 2 - Instalación global  mediante interfaz Konga
@@ -56,8 +48,8 @@ El plugins se encuentra en la sección de análisis y monitoreo
 
 Se puede verificar las metricas en el path /metrics del Kong Gateway 
 
-```bash
-curl http://localhost:8001/metrics
+```powershell
+curl.exe http://localhost:8001/metrics
 ```
 
 Resultado
@@ -68,14 +60,14 @@ Instalación de prometheus con grafana
 
 agregar helm chart
 
-```bash
+```powershell
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo update
 ```
 
 Instalación de prometheus con grafana usando kube-prometheus-stack
 
-```bash
+```powershell
 helm install monitoring prometheus-community/kube-prometheus-stack --create-namespace --namespace monitoring -f taller_2/promethus_grafana/values.yaml
 ```
 
@@ -156,9 +148,11 @@ En  el campo key se debe agregar el consumer token vinculado a la cuenta de logg
 ![Untitled](images/Untitled%208.png)
 
 Para poder ver visualizar logs,  debemos generar trafico en el servicios creado en taller anterior, para ello podemos usar curl para enviar peticiones a nuestro servicio
-
-```bash
-for _ in {1..60}; do {curl -I http://localhost:8000/productos\?apikey=<Token>; sleep 1;}  done
+```powershell
+ for ($i=1; $i -le 60; $i++) {
+     curl.exe -I http://localhost:8000/productos?apikey=<token>
+     Start-Sleep -Seconds 1
+ }
 ```
 
 Exploración de logging en consola de administración loggly 
@@ -183,13 +177,13 @@ Instalación de zipkin
 
 Las configuraciones necesario para el despligue del servidor zipkin se encuentra  dentro del archivo deployment.yaml 
 
-```bash
+```powershell
 kubectl apply -f sesion_3_monitoreo/zipkin/deployment.yaml
 ```
 
 exponer gui zipkin
 
-```bash
+```powershell
 kubectl port-forward service/zipkin  9411:80 &
 ```
 
@@ -215,8 +209,11 @@ curl -X POST http://localhost:8001/plugins/ \
 
 generar trafico 
 
-```bash
-for _ in {1..60}; do {curl -I http://localhost:8000/productos\?apikey\=DREUQDmOxUDRP3I6j2KJYPhQO09bp4Mx; sleep 1;}  done
+```powershell
+ for ($i=1; $i -le 60; $i++) {
+     curl.exe -I http://localhost:8000/productos?apikey=<token>
+     Start-Sleep -Seconds 1
+ }
 ```
 
 Resultado
