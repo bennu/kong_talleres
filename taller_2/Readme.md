@@ -26,6 +26,8 @@ kubectl port-forward service/konga 8080:80
 
 ## II. Métricas (Prometheus)
 
+### a) Instalación y configuración de plugin Prometheus
+
 1. Instalación de plugins Prometheus
 
 Opción 1 - Configuración global mediante cURL
@@ -38,7 +40,7 @@ curl.exe -i -X POST http://localhost:8001/plugins/ `
 
 Opción 2 - Instalación global  mediante interfaz Konga
 
-El plugins se encuentra en la sección de análisis y monitoreo
+Nos dirigimos a la sección plugins de Konga, luego seleccionamos la opción plugins, elegimos la categoría Análisis y Monitoreo y seleccionamos el plugin prometheus
 
 ![Untitled](images/Untitled.png)
 
@@ -46,7 +48,7 @@ El plugins se encuentra en la sección de análisis y monitoreo
 
 ![Untitled](images/Untitled%201.png)
 
-Se puede verificar las metricas en el path /metrics del Kong Gateway 
+2. Se puede verificar las metricas en el path /metrics del Kong Gateway 
 
 ```powershell
 curl.exe http://localhost:8001/metrics
@@ -56,44 +58,44 @@ Resultado
 
 ![Untitled](images/Untitled%202.png)
 
-Instalación de prometheus con grafana
+### b) Instalación de Prometheus con Grafana
 
-agregar helm chart
+1. Agregar helm chart
 
 ```powershell
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo update
 ```
 
-Instalación de prometheus con grafana usando kube-prometheus-stack
+2. Instalación de Prometheus con Grafana usando kube-prometheus-stack
 
 ```powershell
 helm install monitoring prometheus-community/kube-prometheus-stack --create-namespace --namespace monitoring -f taller_2/promethus_grafana/values.yaml
 ```
 
-Creacion de service monitor mediante helm kong api gateway
+3. Creación de service monitor mediante helm Kong API Gateway
 
 ```
 helm upgrade kong kong/kong -f taller_2/promethus_grafana/kong_values.yaml
 ```
 
-Verificar si el serviceMonitor relacionado a kong se creo
+4. Verificar si el serviceMonitor relacionado a kong se creo
 
 ```
 kubectl get serviceMonitor -A
 ```
 
-En la imagen de abajo se puede visualizar que esta creado
+5. En la imagen se observa que ya está creado el service-monitor
 
 ![Captura de pantalla de 2024-06-28 12-37-45.png](images/Captura_de_pantalla_de_2024-06-28_12-37-45.png)
 
-exponer grafana de forma local
+6. Exponer Grafana de forma local
 
 ```
-kubectl -n monitoring port-forward service/monitoring-grafana 8081:80 &
+kubectl -n monitoring port-forward service/monitoring-grafana 8081:80
 ```
 
-ingresar a [http://localhost:8081](http://localhost:8081) desde el navegador. 
+7. Ingresar a [http://localhost:8081](http://localhost:8081) desde el navegador 
 
 ![Pasted image 20240628124704.png](images/Pasted_image_20240628124704.png)
 
@@ -101,25 +103,29 @@ Iniciar sesion con las siguiente credenciales:
 **usuario: admin
 password: prom-operator**
 
-Importación de dashboard Kong Api Gateway
+### c) Importación de dashboard Kong API Gateway
 
-Se debe seleccionar la  seccion de dashboard  para luego presionar import 
+1. Seleccionar la  sección de dashboard para luego presionar import 
 
 ![Pasted image 20240628125431.png](images/Pasted_image_20240628125431.png)
 
-Subir JSON que esta en el repo
+2. Subir JSON que está en el repositorio
 
 ![Pasted image 20240628125500.png](images/Pasted_image_20240628125500.png)
 
-Seleccionar promethues
+3. Seleccionar Prometheus
 
 ![Pasted image 20240628125601.png](images/Pasted_image_20240628125601.png)
 
-Ver gráficos
+4. Visualizar gráficos
 
 ![Untitled](images/Untitled%203.png)
 
-Dentro de este gráficos las métricas a destacar son: 
+5. Dentro de este gráficos las métricas a destacar son:
+
+   *
+   *
+   *
 
 ## III. Logs (Loggly)
 
