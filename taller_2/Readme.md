@@ -70,13 +70,13 @@ helm repo update
 2. Instalación de Prometheus con Grafana usando kube-prometheus-stack
 
 ```powershell
-helm install monitoring prometheus-community/kube-prometheus-stack --create-namespace --namespace monitoring -f taller_2/promethus_grafana/values.yaml
+helm install monitoring prometheus-community/kube-prometheus-stack --create-namespace --namespace monitoring -f taller_2/prometheus_grafana/values.yaml
 ```
 
 3. Creación de service monitor mediante helm Kong API Gateway
 
 ```
-helm upgrade kong kong/kong -f taller_2/promethus_grafana/kong_values.yaml
+helm upgrade kong kong/kong -f taller_2/prometheus_grafana/kong_values.yaml
 ```
 
 4. Verificar si el serviceMonitor relacionado a kong se creo
@@ -100,8 +100,9 @@ kubectl -n monitoring port-forward service/monitoring-grafana 8081:80
 ![Pasted image 20240628124704.png](images/Pasted_image_20240628124704.png)
 
 Iniciar sesion con las siguiente credenciales:
-**usuario: admin
-password: prom-operator**
+
+- **usuario:** admin
+- **password:** prom-operator
 
 ### c) Importación de dashboard Kong API Gateway
 
@@ -123,37 +124,41 @@ password: prom-operator**
 
 5. Dentro de este gráficos las métricas a destacar son:
 
-   *
-   *
-   *
+   * Total request per seconds (RPS)
+   * RPS/service
+   * Total Bandwith
+   * Egress per service
+   * Ingress per service
+   * Kong Proxy Latency all services // per services
 
 ## III. Logs (Loggly)
 
-Creacion de cuenta en solarwings loggly
+### a) Creación de cuenta en Solarwings Loggly
 
-crear una cuenta [https://www.loggly.com/signup/](https://www.loggly.com/signup/)
+1. Crear una cuenta [https://www.loggly.com/signup/](https://www.loggly.com/signup/)
 
 ![Untitled](images/Untitled%204.png)
 
-Ir al sección de LOGS/Source Setup 
+2. Ir al sección de LOGS/Source Setup 
 
 ![Untitled](images/Untitled%205.png)
 
-Luego Customer Tokens y copiar o crear un token
+3. Luego Customer Tokens y copiar o crear un token
 
 ![Untitled](images/Untitled%206.png)
 
-Implementan plugin loggly 
+### b) Implementar plugin Loggly 
 
-Se debe seleccionar la categoría Logging   y  agregar Loggly  
+1. Se debe seleccionar la categoría Logging   y  agregar Loggly  
 
 ![Untitled](images/Untitled%207.png)
 
-En  el campo key se debe agregar el consumer token vinculado a la cuenta de loggly, ademas podemos  dar un tags para identificar el trafico proveniente de Kong api gateway o entidad asociada al plugin . en este caso el Tags es “kong”. 
+2. En el campo key se debe agregar el consumer token vinculado a la cuenta de loggly, ademas podemos  dar un tags para identificar el trafico proveniente de Kong api gateway o entidad asociada al plugin . en este caso el Tags es “kong”. 
 
 ![Untitled](images/Untitled%208.png)
 
-Para poder ver visualizar logs,  debemos generar trafico en el servicios creado en taller anterior, para ello podemos usar curl para enviar peticiones a nuestro servicio
+3. Para poder ver visualizar logs,  debemos generar trafico en el servicios creado en taller anterior, para ello podemos usar curl para enviar peticiones a nuestro servicio
+
 ```powershell
  for ($i=1; $i -le 60; $i++) {
      curl.exe -I http://localhost:8000/productos?apikey=<token>
@@ -161,59 +166,46 @@ Para poder ver visualizar logs,  debemos generar trafico en el servicios creado 
  }
 ```
 
-Exploración de logging en consola de administración loggly 
+### c) Exploración de logging desde consola de administración loggly 
 
-Si vamos a la sección LOGS/Log explorer 
+1. Nos dirigimos a la sección LOGS/Log explorer 
 
 ![Untitled](images/Untitled%209.png)
 
- 
-
-Se puede visualizar los logs en formato Json que tiene como origen el kong Api Gateway
+2. Se pueden visualizar los logs en formato JSON que tiene como origen Kong API Gateway
 
 ![Untitled](images/Untitled%2010.png)
 
-[https://konghq.com/blog/learning-center/what-is-api-security](https://konghq.com/blog/learning-center/what-is-api-security)
-
-dashboard  
 
 ## IV. Tracing (Zipkin)
 
-Instalación de zipkin
+### a) Instalación de Zipkin
 
-Las configuraciones necesario para el despligue del servidor zipkin se encuentra  dentro del archivo deployment.yaml 
+1. Las configuraciones necesario para el despligue del servidor zipkin se encuentra dentro del archivo deployment.yaml 
 
 ```powershell
 kubectl apply -f sesion_3_monitoreo/zipkin/deployment.yaml
 ```
 
-exponer gui zipkin
+2. Se crea port-forward de Zipkin
 
 ```powershell
-kubectl port-forward service/zipkin  9411:80 &
+kubectl port-forward service/zipkin  9411:80
 ```
 
-La interfaz de zipkin se puede acceder a traves de http:/localhost:9411
+3. Una vez expuesto es posible acceder a GUI de Zipkin desde http:/localhost:9411
 
-Instalación de plugins Zipkin
+4. Instalación de plugins Zipkin
 
 ```powershell
-curl -X POST http://localhost:8001/plugins/ \
-   --header "accept: application/json" \https://konghq.com/blog/learning-center/what-is-api-security
-   --header "Content-Type: application/json" \
-   --data '
-   {
- "name": "zipkin",
- "config": {
-   "http_endpoint": "http://zipkin.default/api/v2/spans",
-   "sample_ratio": 1,
-   "include_credential": true
- }
-}
-   '
+curl.exe -i -X POST http://localhost:8001/plugins/ `
+--data 'name=zipkin' `
+--data 'config.http_endpoint=http://zipkin.default/api/v2/spans' `
+--data 'config.sample_ratio=1' `
+--data 'config.include_credential=true' 
 ```
 
-generar trafico 
+4. Generar tráfico 
 
 ```powershell
  for ($i=1; $i -le 60; $i++) {
