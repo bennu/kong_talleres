@@ -176,6 +176,31 @@ Iniciar sesion con las siguiente credenciales:
 
 ![Untitled](images/Untitled%2010.png)
 
+3. Dentro de estos logs los parámetros a destacar son:
+
+**a) request**
+
+- method
+- size
+- request_URI
+- headers
+
+**b) response**
+
+- status
+- headers
+- date 
+
+**c) latencies**
+
+- request (ms)
+- proxy (ms)
+- receive (ms)
+  
+**e) started at**
+
+**e) client ip**
+
 
 ## IV. Tracing (Zipkin)
 
