@@ -99,7 +99,7 @@ kubectl -n monitoring port-forward service/monitoring-grafana 8081:80
 
 ![Pasted image 20240628124704.png](images/Pasted_image_20240628124704.png)
 
-Iniciar sesión con las siguiente credenciales:
+Iniciamos sesión con las siguiente credenciales:
 
 - **usuario:** admin
 - **password:** prom-operator
@@ -110,7 +110,7 @@ Iniciar sesión con las siguiente credenciales:
 
 ![Pasted image 20240628125431.png](images/Pasted_image_20240628125431.png)
 
-2. Subimos el archivo JSON **`dashboard_kong.json`** que se encuentra en el repositorio del taller [promethus_grafana/dashboard_kong.json](https://github.com/bennu/kong_talleres/blob/main/taller_2/promethus_grafana/dashboard_kong.json)
+2. Subimos el archivo JSON **`dashboard_kong.json`** que se encuentra en el repositorio del taller [promethus_grafana/dashboard_kong.json](https://github.com/bennu/kong_talleres/blob/main/taller_2/promethus_grafana/dashboard_kong.json) y pulsamos en **Loading**
 
 ![Pasted image 20240628125500.png](images/Pasted_image_20240628125500.png)
 
@@ -118,11 +118,11 @@ Iniciar sesión con las siguiente credenciales:
 
 ![Pasted image 20240628125601.png](images/Pasted_image_20240628125601.png)
 
-4. Visualizar gráficos
+4. Comenzaremos a visualizar los gráficos
 
 ![Untitled](images/Untitled%203.png)
 
-5. Dentro de este gráficos las métricas a destacar son:
+Dentro de este gráficos las métricas a destacar son:
 
    * Total request per seconds (RPS)
    * RPS/service
