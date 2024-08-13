@@ -85,7 +85,7 @@ helm upgrade kong kong/kong -f taller_2/prometheus_grafana/kong_values.yaml
 kubectl get serviceMonitor -A
 ```
 
-5. En la imagen se observa que ya está creado el **`ServiceMonitor`**
+5. En la imagen se observa que ya está creado el **`ServiceMonitor`**, identificándose con el nombre **`kong-kong`**
 
 ![Captura de pantalla de 2024-06-28 12-37-45.png](images/Captura_de_pantalla_de_2024-06-28_12-37-45.png)
 
@@ -106,15 +106,15 @@ Iniciar sesión con las siguiente credenciales:
 
 ### c) Importación de dashboard Kong API Gateway
 
-1. Seleccionar la  sección de dashboard para luego presionar import 
+1. Desde [http://localhost:8081](http://localhost:8081) seleccionamos el apartado **`Dashboard`**. Nos dirigimos al extremo superior derecho, pulsamos sobre **`New`** y luego en **`Import`**
 
 ![Pasted image 20240628125431.png](images/Pasted_image_20240628125431.png)
 
-2. Subir JSON que está en el repositorio
+2. Subimos el archivo JSON **`dashboard_kong.json`** que se encuentra en el repositorio del taller [promethus_grafana/dashboard_kong.json](https://github.com/bennu/kong_talleres/blob/main/taller_2/promethus_grafana/dashboard_kong.json)
 
 ![Pasted image 20240628125500.png](images/Pasted_image_20240628125500.png)
 
-3. Seleccionar Prometheus
+3. Seleccionamos Prometheus
 
 ![Pasted image 20240628125601.png](images/Pasted_image_20240628125601.png)
 
