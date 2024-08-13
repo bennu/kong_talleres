@@ -28,7 +28,7 @@ kubectl port-forward service/konga 8080:80
 
 ### a) Instalación y configuración de plugin Prometheus
 
-1. Instalación de plugins Prometheus
+1. Instalaremos el plugins Prometheus
 
 Opción 1 - Configuración global mediante cURL
 
@@ -40,7 +40,7 @@ curl.exe -i -X POST http://localhost:8001/plugins/ `
 
 Opción 2 - Instalación global  mediante interfaz Konga
 
-Nos dirigimos a la sección plugins de Konga, luego seleccionamos la opción plugins, elegimos la categoría Análisis y Monitoreo y seleccionamos el plugin prometheus
+Nos dirigimos a la sección plugins de Konga, luego seleccionamos la opción plugins, elegimos la categoría **Analytics & Monitoring** y seleccionamos Prometheus
 
 ![Untitled](images/Untitled.png)
 
@@ -48,7 +48,7 @@ Nos dirigimos a la sección plugins de Konga, luego seleccionamos la opción plu
 
 ![Untitled](images/Untitled%201.png)
 
-2. Se puede verificar las metricas en el path /metrics del Kong Gateway 
+2. Se puede verificar las métricas en el path /metrics del Kong Gateway 
 
 ```powershell
 curl.exe http://localhost:8001/metrics
@@ -60,46 +60,46 @@ Resultado
 
 ### b) Instalación de Prometheus con Grafana
 
-1. Agregar helm chart
+1. Agregar repositorio Helm de **`Prometheus`**
 
 ```powershell
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo update
 ```
 
-2. Instalación de Prometheus con Grafana usando kube-prometheus-stack
+2. Instalamos Prometheus con Grafana usando Helm chart de **`kube-prometheus-stack`**
 
 ```powershell
 helm install monitoring prometheus-community/kube-prometheus-stack --create-namespace --namespace monitoring -f taller_2/prometheus_grafana/values.yaml
 ```
 
-3. Creación de service monitor mediante helm Kong API Gateway
+3. Crear **`ServiceMonitor`** actualizando los valores de Helm chart **`Kong API Gateway`**
 
 ```
 helm upgrade kong kong/kong -f taller_2/prometheus_grafana/kong_values.yaml
 ```
 
-4. Verificar si el serviceMonitor relacionado a kong se creo
+4. Verificar si el **`ServiceMonitor`** se creó correctamente
 
 ```
 kubectl get serviceMonitor -A
 ```
 
-5. En la imagen se observa que ya está creado el service-monitor
+5. En la imagen se observa que ya está creado el **`ServiceMonitor`**
 
 ![Captura de pantalla de 2024-06-28 12-37-45.png](images/Captura_de_pantalla_de_2024-06-28_12-37-45.png)
 
-6. Exponer Grafana de forma local
+6. Luego expondremos Grafana de manera local en el puerto **`8081`**
 
 ```
 kubectl -n monitoring port-forward service/monitoring-grafana 8081:80
 ```
 
-7. Ingresar a [http://localhost:8081](http://localhost:8081) desde el navegador 
+7. Desde el navegador ingresamos a la siguiente URL [http://localhost:8081](http://localhost:8081) 
 
 ![Pasted image 20240628124704.png](images/Pasted_image_20240628124704.png)
 
-Iniciar sesion con las siguiente credenciales:
+Iniciar sesión con las siguiente credenciales:
 
 - **usuario:** admin
 - **password:** prom-operator
