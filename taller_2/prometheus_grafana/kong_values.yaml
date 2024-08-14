@@ -28,6 +28,7 @@ proxy:
 serviceMonitor:
   namespace: monitoring
   enabled: true
+  interval: 10s
 
 postgresql:
   enabled: true
