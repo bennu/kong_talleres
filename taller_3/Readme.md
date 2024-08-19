@@ -1,5 +1,9 @@
 # Taller 3 - Seguridad
 
+**Objetivo:** Implementar modelo de API Security mediante herramientas de autenticación, autorización (OAuth 2.0) y prevención de amenazas (rate limiting y boot detection)
+
+**Nota:** Como este levantamiento sucede a nivel local en el momento que se configure el plugin **`OAuth 2.0 Authentication`** Kong API Gateway tomará la función de **`Authorization Server`**. En un ambiente productivo, es recomendado usar un servicio externo como Identity Provider (idP) como Okta, MiniOrange
+
 ### I. Configuración de OAuth 2.0
 
 1. Se crea servicio de nombre “**usuarios**”
