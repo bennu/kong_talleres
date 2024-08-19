@@ -6,7 +6,7 @@
 
 ### I. Configuración de OAuth 2.0
 
-1. Se crea servicio de nombre “**usuarios**”
+1. Crearemos un services de nombre **`usuarios`**
 
 ```powershell
 curl.exe -X POST `
@@ -15,7 +15,7 @@ curl.exe -X POST `
 --data 'url=https://dummyjson.com/user'
 ```
 
-1. Posteriormente se crea un route 
+2. Posteriormente creamos un route y le definiremos un path de nombre **`/usuarios`**
 
 ```powershell
 curl.exe -X POST `
@@ -23,7 +23,7 @@ curl.exe -X POST `
 --data 'paths[]=/usuarios'
 ```
 
-1. Se configura el plugin OAuth 2.0 Authentication
+3. Se configura el plugin OAuth 2.0 Authentication con los siguientes parámetros
 
 ```powershell
 curl.exe -X POST `
@@ -40,14 +40,13 @@ curl.exe -X POST `
 --data 'config.enable_password_grant=true'
 ```
 
-1. Se valida API con curl [http://localhost:8000/usuarios](http://localhost:8000/usuarios). Debiésemos obtener un código 401 Unauthorized
+4. Se valida API mediante cURL [http://localhost:8000/usuarios](http://localhost:8000/usuarios). Debiésemos obtener un código del tipo **`401 Unauthorized`**
 
 ```powershell
 curl.exe localhost:8000/usuarios
 ```
 
-Resultado
-
+Resultado de la ejecución:
 ```powershell
 {
     'error': 'invalid_request',
@@ -55,7 +54,7 @@ Resultado
 }
 ```
 
-1. Se crea un consumer
+5. Crearemos un consumer de nombre **`app_tercero`**
 
 ```powershell
 curl.exe -X POST `
@@ -63,7 +62,7 @@ curl.exe -X POST `
 --data 'username=app_tercero'
 ```
 
-1. Se crean credenciales OAuth 2.0 para el consumer “**app_tercero**”
+6. Se crean credenciales OAuth 2.0 para el consumer **`app_tercero`**
 
 ```powershell
 curl.exe -X POST `
@@ -77,7 +76,7 @@ curl.exe -X POST `
 
 ### II. Flujo Authorization Code
 
-1. El consumer **app_tercero** envía petición de autorización  
+1. El consumer **`app_tercero`** enviará petición de autorización  
 
 ```powershell
 curl.exe -X POST `
@@ -90,7 +89,7 @@ curl.exe -X POST `
 --insecure
 ```
 
-1. Otorgamiento de autorización **app_tercero**. Este debiese devolver una URL con el Authorization code 
+2. Otorgamiento de autorización **app_tercero**. Este debiese devolver una URL con el Authorization code 
 
 Ejemplo:
 
