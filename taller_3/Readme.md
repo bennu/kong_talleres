@@ -149,9 +149,9 @@ curl.exe -X POST `
 
 ```
 
-### Protección de api gateway
+### Protección de Kong API Gateway
 
-rate limiting
+a) Rate Limiting
 
 ```powershell
 curl.exe -X POST http://localhost:8001/services/usuarios/plugins `
@@ -178,7 +178,7 @@ Resultado
 }
 ```
 
-request size limiting
+b) Request Size Limiting
 
 ```powershell
 curl.exe -X POST http://localhost:8001/services/usuarios/plugins `
@@ -210,7 +210,7 @@ Server: kong/2.8.5
 }
 ```
 
-Bot detection
+c) Bot detection
 
 ```powershell
 curl.exe -X POST http://localhost:8001/services/oauth2-test/plugins `
