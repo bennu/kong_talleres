@@ -1,6 +1,6 @@
 # Taller 3 - Seguridad
 
-**Objetivo:** Implementar modelo de API Security mediante herramientas de autenticación, autorización (OAuth 2.0) y prevención de amenazas (rate limiting y boot detection)
+**Objetivo:** Implementar modelo de API Security mediante herramientas de autenticación, autorización (OAuth 2.0) y prevención de amenazas (rate limiting, request size limiting y boot detection)
 
 **Nota:** Como este levantamiento sucede a nivel local en el momento que se configure el plugin **`OAuth 2.0 Authentication`** será Kong API Gateway el que tomará la función de **`Authorization Server`**. En un ambiente productivo, es recomendado usar un servicio externo como Identity Provider (idP) como Okta ó MiniOrange
 
@@ -151,7 +151,7 @@ curl.exe -X POST `
 
 ### Protección de Kong API Gateway
 
-a) Rate Limiting
+#### a) Rate Limiting
 
 ```powershell
 curl.exe -X POST http://localhost:8001/services/usuarios/plugins `
@@ -178,7 +178,7 @@ Resultado
 }
 ```
 
-b) Request Size Limiting
+#### b) Request Size Limiting
 
 ```powershell
 curl.exe -X POST http://localhost:8001/services/usuarios/plugins `
@@ -188,7 +188,7 @@ curl.exe -X POST http://localhost:8001/services/usuarios/plugins `
 --data 'config.require_content_length=false' 
 ```
 
-prueba
+Prueba
 
 ```powershell
 curl.exe -X POST --url 'http://localhost:8000/usuarios' --data '@payload.json' --header 'Authorization: Bearer YJ3NKhFGxbd1wbvul8oXfQO26xejffWw'
@@ -210,7 +210,7 @@ Server: kong/2.8.5
 }
 ```
 
-c) Bot detection
+#### c) Bot Detection
 
 ```powershell
 curl.exe -X POST http://localhost:8001/services/oauth2-test/plugins `
