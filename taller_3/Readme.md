@@ -149,7 +149,7 @@ curl.exe -X POST `
 
 ```
 
-### Protección de Kong API Gateway
+### III. Protección de Kong API Gateway
 
 #### a) Rate Limiting
 
