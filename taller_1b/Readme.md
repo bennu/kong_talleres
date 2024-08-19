@@ -2,6 +2,7 @@
 
 **Objetivo:** Crear entidades como Routes, Services, Plugins y Consumers usando distintas estrategias de administración (Konga, cURL y deck)
 
+## I. Pre-requisitos:
 Para poder iniciar el taller se necesita exponer los siguientes servicios de manera local, exponiendo API Gateway y Admin API de Kong
 
 **a) API Gateway**
@@ -22,7 +23,7 @@ kubectl port-forward service/kong-kong-admin 8001:8001
 kubectl port-forward service/konga 8080:80 
 ```
 
-## I. Konga
+## II. Konga
 
 En este ejemplo ocuparemos el API https://dummyjson.com/products, que es una API de desarrollo que muestra datos de prueba. Para esto se expondrá esta API desde la interfaz de Konga
 
@@ -179,7 +180,7 @@ Como definimos la manera de como se autenticarán a nuestro servicio ó API medi
 
 ![Untitled](images/Untitled%2022.png)
 
-## II. cURL
+## III. cURL
 
 cURL es una herramienta de línea de comandos que interactuar con la Admin API de Kong, permitiendo realizar solicitudes HTTP.
 
@@ -296,7 +297,7 @@ curl.exe -i -X PATCH `
 curl http://localhost:8000/productos?apikey=<apikey generado anteriormente>
 ```
 
-## III. deck
+## IV. deck
 
 1. Generar un dump de las configuraciones de Kong , se va crear un archivos llamado “kong.yaml”
 
