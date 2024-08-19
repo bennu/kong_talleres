@@ -10,34 +10,34 @@
 
 ```powershell
 curl.exe -X POST `
-  --url 'http://localhost:8001/services' `
-  --data 'name=usuarios' `
-  --data 'url=https://dummyjson.com/user'
+--url 'http://localhost:8001/services' `
+--data 'name=usuarios' `
+--data 'url=https://dummyjson.com/user'
 ```
 
 1. Posteriormente se crea un route 
 
 ```powershell
 curl.exe -X POST `
-  --url 'http://localhost:8001/services/usuarios/routes' `
-  --data 'paths[]=/usuarios'
+--url 'http://localhost:8001/services/usuarios/routes' `
+--data 'paths[]=/usuarios'
 ```
 
 1. Se configura el plugin OAuth 2.0 Authentication
 
 ```powershell
 curl.exe -X POST `
-  --url http://localhost:8001/services/usuarios/plugins/ `
-  --data 'name=oauth2' `
-  --data 'config.scopes[]=email' `
-  --data 'config.scopes[]=phone' `
-  --data 'config.scopes[]=address' `
-  --data 'config.mandatory_scope=true' `
-  --data 'config.provision_key=oauth2-demo-provision-key' `
-  --data 'config.enable_authorization_code=true' `
-  --data 'config.enable_client_credentials=true' `
-  --data 'config.enable_implicit_grant=true' `
-  --data 'config.enable_password_grant=true'
+--url http://localhost:8001/services/usuarios/plugins/ `
+--data 'name=oauth2' `
+--data 'config.scopes[]=email' `
+--data 'config.scopes[]=phone' `
+--data 'config.scopes[]=address' `
+--data 'config.mandatory_scope=true' `
+--data 'config.provision_key=oauth2-demo-provision-key' `
+--data 'config.enable_authorization_code=true' `
+--data 'config.enable_client_credentials=true' `
+--data 'config.enable_implicit_grant=true' `
+--data 'config.enable_password_grant=true'
 ```
 
 1. Se valida API con curl [http://localhost:8000/usuarios](http://localhost:8000/usuarios). Debiésemos obtener un código 401 Unauthorized
@@ -59,20 +59,20 @@ Resultado
 
 ```powershell
 curl.exe -X POST `
-  --url 'http://localhost:8001/consumers/' `
-  --data 'username=app_tercero'
+--url 'http://localhost:8001/consumers/' `
+--data 'username=app_tercero'
 ```
 
 1. Se crean credenciales OAuth 2.0 para el consumer “**app_tercero**”
 
 ```powershell
 curl.exe -X POST `
-  --url 'http://localhost:8001/consumers/app_tercero/oauth2/' `
-  --data 'name=Oauth2 App example' `
-  --data 'client_id=oauth2-demo-client-id' `
-  --data 'client_secret=oauth2-demo-client-secret' `
-  --data 'redirect_uris[]=http://localhost:8000/usuarios' `
-  --data 'hash_secret=true'
+--url 'http://localhost:8001/consumers/app_tercero/oauth2/' `
+--data 'name=Oauth2 App example' `
+--data 'client_id=oauth2-demo-client-id' `
+--data 'client_secret=oauth2-demo-client-secret' `
+--data 'redirect_uris[]=http://localhost:8000/usuarios' `
+--data 'hash_secret=true'
 ```
 
 ### II. Flujo Authorization Code
@@ -81,13 +81,13 @@ curl.exe -X POST `
 
 ```powershell
 curl.exe -X POST `
-  --url 'https://localhost:8443/usuarios/oauth2/authorize' `
-  --data 'response_type=code' `
-  --data 'scope=email address' `
-  --data 'client_id=oauth2-demo-client-id' `
-  --data 'provision_key=oauth2-demo-provision-key' `
-  --data 'authenticated_userid=authenticated_tester' `
-  --insecure
+--url 'https://localhost:8443/usuarios/oauth2/authorize' `
+--data 'response_type=code' `
+--data 'scope=email address' `
+--data 'client_id=oauth2-demo-client-id' `
+--data 'provision_key=oauth2-demo-provision-key' `
+--data 'authenticated_userid=authenticated_tester' `
+--insecure
 ```
 
 1. Otorgamiento de autorización **app_tercero**. Este debiese devolver una URL con el Authorization code 
@@ -132,22 +132,16 @@ curl.exe -X GET `
 --header 'Authorization: Bearer?? <ACCESS_TOKEN>'
 ```
 
-resultados
-
-```powershell
-
-```
-
 Paso 6:  El Access Token suele tener un tiempo de expiración asociado y eso obliga a tener un flujo de renovación de Token, podemos probar este flujo de la siguiente manera 
 
 ```powershell
-	curl.exe -X POST `
-	  --url 'https://localhost:8443/usuarios/oauth2/token' `
-	  --data 'grant_type=refresh_token' `
-	  --data 'client_id=oauth2-demo-client-id' `
-	  --data 'client_secret=oauth2-demo-client-secret' `
-	  --data 'refresh_token=<REFRESH_TOKEN>' `
-	  --insecure
+curl.exe -X POST `
+--url 'https://localhost:8443/usuarios/oauth2/token' `
+--data 'grant_type=refresh_token' `
+--data 'client_id=oauth2-demo-client-id' `
+--data 'client_secret=oauth2-demo-client-secret' `
+--data 'refresh_token=<REFRESH_TOKEN>' `
+--insecure
 
 ```
 
@@ -157,10 +151,10 @@ rate limiting
 
 ```powershell
 curl.exe -X POST http://localhost:8001/services/usuarios/plugins `
-   --data 'name=rate-limiting' `
-   --data 'config.minute=3' `
-   --data 'config.hour=10000' `
-   --data 'config.policy=local'
+--data 'name=rate-limiting' `
+--data 'config.minute=3' `
+--data 'config.hour=10000' `
+--data 'config.policy=local'
 ```
 
 Prueba 
@@ -180,18 +174,14 @@ Resultado
 }
 ```
 
-Podemos crear un dashboard y visualizar alertas
-
-![Untitled](images/Untitled.png)
-
 request size limiting
 
 ```powershell
 curl.exe -X POST http://localhost:8001/services/usuarios/plugins `
-    --data 'name=request-size-limiting' `
-    --data 'config.allowed_payload_size=9' `
-    --data 'config.size_unit=kilobytes' `
-    --data 'config.require_content_length=false' 
+--data 'name=request-size-limiting' `
+--data 'config.allowed_payload_size=9' `
+--data 'config.size_unit=kilobytes' `
+--data 'config.require_content_length=false' 
 ```
 
 prueba
@@ -220,8 +210,8 @@ Bot detection
 
 ```powershell
 curl.exe -X POST http://localhost:8001/services/oauth2-test/plugins `
-   --data 'name=bot-detection' `
-   --data 'config.deny=postman'
+--data 'name=bot-detection' `
+--data 'config.deny=postman'
 ```
 
 Prueba
