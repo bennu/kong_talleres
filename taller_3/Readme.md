@@ -1,6 +1,6 @@
 # Taller 3 - Seguridad
 
-**Objetivo:** Implementar modelo de API Security mediante herramientas de autenticación, autorización (OAuth 2.0) y prevención de amenazas (rate limiting, request size limiting y boot detection)
+**Objetivo:** Implementar modelo de API Security mediante herramientas de autenticación, autorización (OAuth 2.0) y prevención de amenazas (rate limiting, request size limiting y bot detection)
 
 **Nota:** Como este levantamiento sucede a nivel local en el momento que se configure el plugin **`OAuth 2.0 Authentication`** será Kong API Gateway el que tomará la función de **`Authorization Server`**. En un ambiente productivo, es recomendado usar un servicio externo como Identity Provider (idP) como Okta ó MiniOrange
 
@@ -135,7 +135,7 @@ curl.exe -X GET `
 
 6. El **`Access Token`** suele tener un tiempo de expiración asociado y eso obliga a tener un flujo de renovación del Token. Podemos probar este flujo de la siguiente manera 
 
-> Nota: La función del **`Refresh Token`** es renovar el **`Access Token`** una vez que este expire
+> Nota: La función del **`Refresh Token`** es renovar el **`Access Token`** en el momento que este expire
 > 
 
 ```powershell
