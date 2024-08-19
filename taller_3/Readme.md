@@ -23,7 +23,7 @@ curl.exe -X POST `
 --data 'paths[]=/usuarios'
 ```
 
-3. Se configura el plugin OAuth 2.0 Authentication con los siguientes parámetros
+3. Se configura el plugin **`OAuth 2.0 Authentication`** con los siguientes parámetros
 
 ```powershell
 curl.exe -X POST `
