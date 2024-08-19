@@ -89,7 +89,7 @@ curl.exe -X POST `
 --insecure
 ```
 
-2. Otorgamiento de autorización **app_tercero**. Este debiese devolver una URL con el Authorization code 
+2. Luego realizamos el otorgamiento de autorización al consumer **`app_tercero`**. Este debiese devolver una URL con el Authorization code 
 
 Ejemplo:
 
@@ -99,7 +99,7 @@ Ejemplo:
 }
 ```
 
-1. Se realiza intercambio de Authorization code por Access Token
+3. Se realiza intercambio de Authorization code por Access Token para que el consumer **`app_tercero`** pueda acceder a los recursos
 
 ```powershell
 curl.exe -X POST https://localhost:8443/usuarios/oauth2/token `
@@ -110,9 +110,11 @@ curl.exe -X POST https://localhost:8443/usuarios/oauth2/token `
 --insecure
 ```
 
-1. Respuesta  intercambio de  Authorization code por  Access Token
+4. Realizado este intercambio obtendremos:
 
-se obtiene un :   Access Token , refresh token y tiempo de expiracion del Acess Token
+- Access Token
+- Refresh Token
+- Tiempo de expiración del Access Token
 
 ```powershell
 {
@@ -123,7 +125,7 @@ se obtiene un :   Access Token , refresh token y tiempo de expiracion del Acess 
 }
 ```
 
-Paso 5:  Validar  Access Token
+5. Validamos el **`Access Token`**
 
 ```powershell
 curl.exe -X GET `
@@ -131,7 +133,10 @@ curl.exe -X GET `
 --header 'Authorization: Bearer?? <ACCESS_TOKEN>'
 ```
 
-Paso 6:  El Access Token suele tener un tiempo de expiración asociado y eso obliga a tener un flujo de renovación de Token, podemos probar este flujo de la siguiente manera 
+6. El **`Access Token`** suele tener un tiempo de expiración asociado y eso obliga a tener un flujo de renovación del Token. Podemos probar este flujo de la siguiente manera 
+
+> Nota: La función del **`Refresh Token`** es renovar el **`Access Token`** una vez que este expire
+> 
 
 ```powershell
 curl.exe -X POST `
