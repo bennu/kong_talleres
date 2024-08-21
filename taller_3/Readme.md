@@ -9,26 +9,14 @@ Para poder iniciar el taller se necesita exponer los siguientes servicios de man
 
 **a) API Gateway**
 
-HTTP
 ```powershell
-kubectl port-forward service/kong-kong-proxy 8000:80
-```
-
-HTTPS
-```powershell
-kubectl port-forward service/kong-kong-proxy 8443:443
+kubectl port-forward service/kong-kong-proxy 8000:80 8443:443
 ```
 
 **b) Admin API**
 
 ```powershell
 kubectl port-forward service/kong-kong-admin 8001:8001 
-```
-
-**c) Konga**
-
-```powershell
-kubectl port-forward service/konga 8080:80
 ```
 
 ## II. Configuración de OAuth 2.0
@@ -116,13 +104,13 @@ curl.exe -X POST `
 --insecure
 ```
 
-2. Luego realizamos el otorgamiento de autorización al consumer **`app_tercero`**. Este debiese devolver una URL con el Authorization code 
+2. Luego realizamos el otorgamiento de autorización al consumer **`app_tercero`**. Este debiese devolver una URL con el **`Authorization code`**
 
-Ejemplo:
+ Ejemplo de la ejecucion del comando anterior:
 
 ```powershell
 {
-  'redirect_uri': 'http://localhost:8000/?code=jvnD1XBgFqZuqT2OlbcXpDiOlFkx75bU'
+  'redirect_uri': 'http://localhost:8000/?code=<Authorization code>'
 }
 ```
 
@@ -133,7 +121,7 @@ curl.exe -X POST https://localhost:8443/usuarios/oauth2/token `
 --data 'grant_type=authorization_code' `
 --data 'client_id=oauth2-demo-client-id' `
 --data 'client_secret=oauth2-demo-client-secret' `
---data 'code=jvnD1XBgFqZuqT2OlbcXpDiOlFkx75bU' `
+--data 'code=<Authorization Code devuelto en la URL>' `
 --insecure
 ```
 
@@ -143,21 +131,22 @@ curl.exe -X POST https://localhost:8443/usuarios/oauth2/token `
 - Refresh Token
 - Tiempo de expiración del Access Token
 
+ Ejemplo de respuesta de la ejecución anterior 
 ```powershell
 {
-'refresh_token': 'LqJW6mVH4XsNZnoQ5fYbjngBsbUJPVPh',
+'refresh_token': '<Refresh Token>',
 'token_type': 'bearer',
-'access_token': 'BZiZzJVEuP2mgNvZZBr0mgbRtKsdqgZf',
+'access_token': '<Access Token>',
 'expires_in': 7200
 }
 ```
 
-5. Validamos el **`Access Token`**
+5. Validamos el **`Access Token`** 
 
 ```powershell
 curl.exe -X GET `
 --url 'http://localhost:8000/usuarios' `
---header 'Authorization: Bearer?? <ACCESS_TOKEN>'
+--header 'Authorization: Bearer <Access Token devuelto de la ejecución en el punto #3>'
 ```
 
 6. El **`Access Token`** suele tener un tiempo de expiración asociado y eso obliga a tener un flujo de renovación del Token. Podemos probar este flujo de la siguiente manera 
@@ -171,7 +160,7 @@ curl.exe -X POST `
 --data 'grant_type=refresh_token' `
 --data 'client_id=oauth2-demo-client-id' `
 --data 'client_secret=oauth2-demo-client-secret' `
---data 'refresh_token=<REFRESH_TOKEN>' `
+--data 'refresh_token=<Refresh Token devuelto de la ejecución en el punto #3>' `
 --insecure
 
 ```
