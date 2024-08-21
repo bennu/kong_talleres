@@ -4,13 +4,13 @@
 
 **Nota:** Como este levantamiento sucede a nivel local en el momento que se configure el plugin **`OAuth 2.0 Authentication`** será Kong API Gateway el que tomará la función de **`Authorization Server`**. En un ambiente productivo, es recomendado usar un servicio externo como Identity Provider (idP) como Okta ó MiniOrange
 
-### I. Pre-requisitos:
+## I. Pre-requisitos:
 Para poder iniciar el taller se necesita exponer los siguientes servicios de manera local:
 
 **a) API Gateway**
 
 ```powershell
-kubectl port-forward service/kong-kong-proxy 8000:80 
+kubectl port-forward service/kong-kong-proxy 8443:443
 ```
 
 **b) Admin API**
@@ -25,7 +25,7 @@ kubectl port-forward service/kong-kong-admin 8001:8001
 kubectl port-forward service/konga 8080:80
 ```
 
-### II. Configuración de OAuth 2.0
+## II. Configuración de OAuth 2.0
 
 1. Crearemos un services de nombre **`usuarios`**
 
@@ -95,7 +95,7 @@ curl.exe -X POST `
 --data 'hash_secret=true'
 ```
 
-### III. Flujo Authorization Code
+## III. Flujo Authorization Code
 
 1. El consumer **`app_tercero`** enviará petición de autorización  
 
@@ -170,7 +170,7 @@ curl.exe -X POST `
 
 ```
 
-### V. Protección de Kong API Gateway
+## V. Protección de Kong API Gateway
 
 #### a) Rate Limiting
 
