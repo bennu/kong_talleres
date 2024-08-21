@@ -9,6 +9,12 @@ Para poder iniciar el taller se necesita exponer los siguientes servicios de man
 
 **a) API Gateway**
 
+HTTP
+```powershell
+kubectl port-forward service/kong-kong-proxy 8000:80
+```
+
+HTTPS
 ```powershell
 kubectl port-forward service/kong-kong-proxy 8443:443
 ```
