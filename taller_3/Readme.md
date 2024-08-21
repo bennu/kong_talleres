@@ -150,7 +150,7 @@ curl.exe -X POST https://localhost:8443/usuarios/oauth2/token `
 
 ```powershell
 curl.exe -X GET `
---url '[http://localhost:8000/](http://localhost:8000/demo)usuarios' `
+--url 'http://localhost:8000/usuarios' `
 --header 'Authorization: Bearer?? <ACCESS_TOKEN>'
 ```
 
@@ -170,7 +170,7 @@ curl.exe -X POST `
 
 ```
 
-## V. Protección de Kong API Gateway
+## IV. Protección de Kong API Gateway
 
 #### a) Rate Limiting
 
