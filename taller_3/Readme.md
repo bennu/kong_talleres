@@ -212,7 +212,7 @@ curl.exe -X POST http://localhost:8001/services/usuarios/plugins `
 Prueba
 
 ```powershell
-curl.exe -X POST --url 'http://localhost:8000/usuarios' --data '@payload.json' --header 'Authorization: Bearer YJ3NKhFGxbd1wbvul8oXfQO26xejffWw'
+curl.exe -X POST --url 'http://localhost:8000/usuarios' --data '@taller_3/payload.json' --header 'Authorization: Bearer YJ3NKhFGxbd1wbvul8oXfQO26xejffWw'
 ```
 
 Resultado 
