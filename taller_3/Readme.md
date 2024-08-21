@@ -172,8 +172,7 @@ curl.exe -X POST `
 ```powershell
 curl.exe -X POST http://localhost:8001/services/usuarios/plugins `
 --data 'name=rate-limiting' `
---data 'config.minute=3' `
---data 'config.hour=10000' `
+--data 'config.minute=5' `
 --data 'config.policy=local'
 ```
 
@@ -186,11 +185,29 @@ for ($i=1; $i -le 10; $i++) {
 }
 ```
 
-Resultado
+En la 6ta peticcion deberia dar 429 como codigo de estado
+ Resultado
 
 ```powershell
+HTTP/1.1 429 Too Many Requests
+Date: Wed, 21 Aug 2024 17:04:14 GMT
+Content-Type: application/json; charset=utf-8
+Connection: keep-alive
+Retry-After: 46
+X-RateLimit-Remaining-Minute: 0
+X-RateLimit-Limit-Minute: 5
+RateLimit-Remaining: 0
+RateLimit-Limit: 5
+RateLimit-Reset: 46
+Content-Length: 41
+vary: Origin
+Access-Control-Allow-Origin: mockbin.com
+Access-Control-Allow-Credentials: true
+X-Kong-Response-Latency: 2
+Server: kong/2.8.5
+
 {
-  'message':'API rate limit exceeded'
+  "message":"API rate limit exceeded"
 }
 ```
 
