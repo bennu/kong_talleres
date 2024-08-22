@@ -169,6 +169,8 @@ curl.exe -X POST `
 
 #### a) Rate Limiting
 
+1. Asignamos al plugin **`rate-limiting`** un número máximo de 5 peticiones por minutos
+
 ```powershell
 curl.exe -X POST http://localhost:8001/services/usuarios/plugins `
 --data 'name=rate-limiting' `
@@ -176,7 +178,7 @@ curl.exe -X POST http://localhost:8001/services/usuarios/plugins `
 --data 'config.policy=local'
 ```
 
-Prueba 
+2. Generamos tráfico repitiendo el comando por 6 veces
 
 ```powershell
 for ($i=1; $i -le 10; $i++) {
@@ -185,8 +187,7 @@ for ($i=1; $i -le 10; $i++) {
 }
 ```
 
-En la 6ta peticcion deberia dar 429 como codigo de estado
- Resultado
+3. En la 6ta petición debería mostrarse **`429 Too Many Requests`** como código de estado
 
 ```powershell
 HTTP/1.1 429 Too Many Requests
@@ -244,6 +245,8 @@ Server: kong/2.8.5
 ```
 
 #### c) Bot Detection
+
+1. 
 
 ```powershell
 curl.exe -X POST http://localhost:8001/services/oauth2-test/plugins `
