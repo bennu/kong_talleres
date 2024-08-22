@@ -141,7 +141,7 @@ Ejemplo de respuesta de la ejecución del paso #3
 }
 ```
 
-5. Para validar el **`Access Token`** debiésemos apuntar en el **`--header 'Authorization: Bearer`** el token generando en el paso #3
+5. Para validar el **`Access Token`** debiésemos apuntar en el **`--header 'Authorization: Bearer'`** el token generando en el paso #3
 
 ```powershell
 curl.exe -X GET `
