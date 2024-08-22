@@ -261,7 +261,7 @@ curl.exe -X POST http://localhost:8001/services/usuarios/plugins `
 curl.exe -H  'user-agent: postman' localhost:8000/usuarios
 ```
 
-3. Se mostrará que la respuesta a la solicitud del cliente **`postman`** ha sido rechazada
+3. Se mostrará que la respuesta a la solicitud para el cliente **`postman`** ha sido rechazada
 
 ```powershell
 {
