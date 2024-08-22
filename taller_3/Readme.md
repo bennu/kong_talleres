@@ -131,7 +131,7 @@ curl.exe -X POST https://localhost:8443/usuarios/oauth2/token `
 - Refresh Token
 - Tiempo de expiración del Access Token
 
- Ejemplo de respuesta de la ejecución anterior 
+Ejemplo de respuesta de la ejecución del paso #3
 ```powershell
 {
 'refresh_token': '<Refresh Token>',
@@ -141,12 +141,12 @@ curl.exe -X POST https://localhost:8443/usuarios/oauth2/token `
 }
 ```
 
-5. Validamos el **`Access Token`** 
+5. Para validar el **`Access Token`** debiésemos apuntar en el **`--header 'Authorization: Bearer`** el token generando en el paso #3
 
 ```powershell
 curl.exe -X GET `
 --url 'http://localhost:8000/usuarios' `
---header 'Authorization: Bearer <Access Token devuelto de la ejecución en el punto #3>'
+--header 'Authorization: Bearer <Access Token devuelto de la ejecución en el paso #3>'
 ```
 
 6. El **`Access Token`** suele tener un tiempo de expiración asociado y eso obliga a tener un flujo de renovación del Token. Podemos probar este flujo de la siguiente manera 
@@ -160,9 +160,8 @@ curl.exe -X POST `
 --data 'grant_type=refresh_token' `
 --data 'client_id=oauth2-demo-client-id' `
 --data 'client_secret=oauth2-demo-client-secret' `
---data 'refresh_token=<Refresh Token devuelto de la ejecución en el punto #3>' `
+--data 'refresh_token=<Refresh Token devuelto de la ejecución en el paso #3>' `
 --insecure
-
 ```
 
 ## IV. Protección de Kong API Gateway
@@ -214,6 +213,8 @@ Server: kong/2.8.5
 
 #### b) Request Size Limiting
 
+1. Definimos en el plugin **`request-size-limiting`** una cantidad máxima de **`9 kilobytes`** como tamaño máximo de la solicitud
+
 ```powershell
 curl.exe -X POST http://localhost:8001/services/usuarios/plugins `
 --data 'name=request-size-limiting' `
@@ -222,13 +223,13 @@ curl.exe -X POST http://localhost:8001/services/usuarios/plugins `
 --data 'config.require_content_length=false' 
 ```
 
-Prueba
+2. Enviamos una solicitud enviando un archivo **`payload.json`** con un tamaño de **`282 kilobytes`** superando la regla previamente definida
 
 ```powershell
 curl.exe -X POST --url 'http://localhost:8000/usuarios' --data '@taller_3/payload.json' --header 'Authorization: Bearer YJ3NKhFGxbd1wbvul8oXfQO26xejffWw'
 ```
 
-Resultado 
+3. Obtendremos un **`413 Request Entity Too Large`** como código de estado, mostrando que la solicitud supera la regla de los **`9 kilobytes`**
 
 ```powershell
 HTTP/1.1 413 Request Entity Too Large
@@ -246,21 +247,21 @@ Server: kong/2.8.5
 
 #### c) Bot Detection
 
-1. 
+1. En el parámetro **`config.deny`** del plugin **`bot-detection`** apuntamos **`postman`** como un cliente que debiese clasificarse en la lista de clientes no admitidos
 
 ```powershell
-curl.exe -X POST http://localhost:8001/services/oauth2-test/plugins `
+curl.exe -X POST http://localhost:8001/services/usuarios/plugins `
 --data 'name=bot-detection' `
 --data 'config.deny=postman'
 ```
 
-Prueba
+2. Se realiza una solicitud simulando ser el cliente **`postman`**
 
 ```powershell
 curl.exe -H  'user-agent: postman' localhost:8000/usuarios
 ```
 
-Resultado
+3. Se mostrará que la respuesta a la solicitud del cliente **`postman`** ha sido rechazada
 
 ```powershell
 {
